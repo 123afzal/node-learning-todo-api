@@ -8,25 +8,26 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         return console.log('Unable to connect to Server');
     }
     console.log("Connection established successfully");
-    const db = client.db("TodosApp");
-
-    db.collection("todos").find(docs =>{
-        console.log(JSON.stringify(docs))
-    });
-
-    db.collection("todos").find().count().then(count => {
-        console.log("Count of TODOS collection : ", count);
-    });
+    const db = client.db("Users");
 
 
     // db.collection("todos").insert({
-    //     name: "Listing the Cities",
-    //     status: false
+    //     name: "Syed Afzal Hasan",
+    //     age: 22,
+    //     status: "unmarried"
     // }, (err, result) => {
     //     if (err) return console.log("Internal Server Error");
     //     console.log(JSON.stringify(result.ops));
     // });
 
+    db.collection("todos").findOneAndUpdate(
+        {name: "Syed Afzal Hasan"},
+        {$set: {status: "married"}, $inc: {age: 1}},
+        {$new: true}
+    ).then(result=>{
+        console.log(JSON.stringify(result));
+    });
 
-    client.close();
+
+    // client.close();
 });
