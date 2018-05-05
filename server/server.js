@@ -30,6 +30,7 @@ var app = express();
 
 app.use(bodyParser.json());
 
+/* TODOS Routes */
 app.post('/todos', (req,res)=>{
    var todo = new Todo({
        text: req.body.text
@@ -101,6 +102,19 @@ app.patch('/todos/:id', (req,res) => {
         })
         .catch(e=>res.status(400).send())
 });
+
+/* Users Routes */
+app.post('/users', (req, res)=>{
+    var body = _.pick(req.body, ['name', 'email', 'password'])
+    var user = new Users(body);
+
+    user.save().then(()=>{
+        return user.generatAuthToken()
+    }).then((token)=>{
+        res.header({'x-auth': token}).status(200).send(user);
+    })
+        .catch(e=>res.status(400).send(e))
+})
 
 app.listen(port, ()=>{
     console.log("server is up on port : ", port);
