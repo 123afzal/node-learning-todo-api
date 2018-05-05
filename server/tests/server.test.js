@@ -124,3 +124,37 @@ describe('DELETE /todos/:id',  ()=>{
             .end(done);
     })
 });
+
+describe('PATCH /todos/:id', ()=>{
+    it('it should update a todo', (done)=>{
+        var hexId = todos[0]._id.toHexString();
+        var text = "This needs to change";
+        let completed = true;
+        request(app)
+            .patch(`/todos/${hexId}`)
+            .expect(200)
+            .send({text, completed})
+            .expect((res)=>{
+                expect(res.body.todo._id).toBe(hexId)
+            })
+            .end((err, res)=>{
+                if(err){
+                    return done(err)
+                }
+
+                Todo.findById(hexId).then((todo)=>{
+                        expect(todo.text).toBe(text)
+                        expect(todo.completed).toBe(completed)
+                        done();
+                    })
+            })
+    })
+
+    it('should return 404 when todo not founr', (done)=>{
+        var hexId = new ObjectID().toHexString();
+        request(app)
+            .patch(`/todos/${hexId}`)
+            .expect(404)
+            .end(done);
+    })
+});
