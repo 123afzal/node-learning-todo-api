@@ -13,14 +13,17 @@ const todos = [
     {_id: new ObjectID(), text: "testing dummy todo 1"}
 ];
 
-beforeEach((done)=>{
+beforeEach(function(done) {
+    this.timeout(3000);
     Todo.remove({}).then(()=> {
         return Todo.insertMany(todos);
     }).then(() => done())
+        .catch(e=>done(e))
 });
 
 describe('POST / todos', ()=>{
-    it('should create a new todo', (done)=>{
+    it('should create a new todo', function(done){
+        this.timeout(3000);
         var text = 'Something to test for';
 
         request(app)
