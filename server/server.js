@@ -24,6 +24,7 @@ const _ = require('lodash')
 var {mongoose} = require('../server/db');
 var {Todo} = require('./models/todos/todo.model');
 var {Users} = require('./models/users/user.model');
+var {authenticate} = require('./middleware/authenticate');
 
 var port = process.env.PORT;
 var app = express();
@@ -114,7 +115,11 @@ app.post('/users', (req, res)=>{
         res.header({'x-auth': token}).status(200).send(user);
     })
         .catch(e=>res.status(400).send(e))
-})
+});
+
+app.get('/user/me', authenticate, (req,res)=>{
+    res.status(200).send(req.user);
+});
 
 app.listen(port, ()=>{
     console.log("server is up on port : ", port);
