@@ -22,10 +22,10 @@ const users = [
         ]
     },
     {
-        '_id': userTwoID,
-        'name': "Syed Shaheer Hasan",
-        'email': 'sah.shaheer@gmail.com',
-        'password': 'abc123++',
+        _id: userTwoID,
+        name: "Syed Shaheer Hasan",
+        email: 'sah.shaheer@gmail.com',
+        password: 'abc123++',
     }
 ];
 

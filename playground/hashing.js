@@ -6,15 +6,14 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 /* the purpose of this code is to understand how bcrypt algorithm works */
-let pass = "abc123++";
+let pass = "abc123oo";
 
 // bcrypt.genSalt(10, (err, salt)=>{
 //     bcrypt.hash(pass, salt, (err,hashPass)=>{
 //         console.log(hashPass);
 //     })
 // });
-
-let hashedPass = '$2a$10$VEH./2XR.VCcX3DEoLM4vuW7LxmGKbpxGtmVu/VGPTcvOErfK9Kku';
+let hashedPass = "$2a$10$9luADOPR/aG33UpN8mkdR.oHtHmRje4GGNo0SzlFryRZC5gFq.pdy";
 
 bcrypt.compare(pass, hashedPass, (err, res)=>{
     console.log(res);

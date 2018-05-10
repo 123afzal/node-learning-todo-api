@@ -50,7 +50,7 @@ UserSchema.methods.generatAuthToken = function () {
     user.tokens.push({access, token});
 
     return user.save().then(()=>{
-        return  token
+        return token;
     })
 };
 
@@ -71,12 +71,33 @@ UserSchema.statics.findByToken = function (token) {
     }).select('email')
 };
 
+UserSchema.statics.findByCredentials = function (email, password) {
+    var User = this;
+    return User.findOne({email}).then((user)=>{
+        if(!user){
+            return Promise.reject()
+        }
+
+        return new Promise((resolve, reject)=>{
+            bcrypt.compare(password, user.password, (err,res)=>{
+                if(res){
+                    console.log(res);
+                    resolve(user)
+                } else{
+                    console.log(res);
+                    reject()
+                }
+            })
+        })
+    })
+};
+
 UserSchema.pre('save', function (next) {
     var user = this;
-    if(user.isModified){
+    if(user.isModified('password')){
         bcrypt.genSalt(10, (err,salt)=>{
             bcrypt.hash(user.password, salt, (err,hash)=>{
-                user.password = hash
+                user.password = hash;
                 next();
             })
         })

@@ -105,6 +105,8 @@ app.patch('/todos/:id', (req,res) => {
 });
 
 /* Users Routes */
+
+// POST /users
 app.post('/users', (req, res)=>{
     var body = _.pick(req.body, ['name', 'email', 'password'])
     var user = new Users(body);
@@ -117,8 +119,27 @@ app.post('/users', (req, res)=>{
         .catch(e=>res.status(400).send(e))
 });
 
+// GET /me api
 app.get('/users/me', authenticate, (req,res)=>{
     res.status(200).send(req.user);
+});
+
+// POST /users/login
+app.post('/users/login', (req, res)=>{
+    var body = _.pick(req.body,['email', 'password'])
+
+    Users.findByCredentials(body.email, body.password).then((user)=>{
+        console.log("credetials")
+        return user.generatAuthToken().then((token)=>{
+            console.log("ayht",token)
+            console.log(user);
+            res.header({'x-auth': token}).status(200).send(user);
+        })
+    })
+        .catch((e)=>{
+        console.log(e);
+            res.status(400).send(e)
+    })
 });
 
 app.listen(port, ()=>{
