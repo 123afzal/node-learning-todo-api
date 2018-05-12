@@ -26,6 +26,12 @@ const users = [
         name: "Syed Shaheer Hasan",
         email: 'sah.shaheer@gmail.com',
         password: 'abc123++',
+        tokens : [
+            {
+                'access': 'auth',
+                'token': jwt.sign({_id: userTwoID.toHexString(), access: 'auth'}, 'thisismysecret').toString()
+            }
+        ]
     }
 ];
 
@@ -40,8 +46,8 @@ const populatedUsers = function (done) {
 };
 
 const todos = [
-    {_id: new ObjectID(), text: "testing dummy todo 1"},
-    {_id: new ObjectID(), text: "testing dummy todo 1"}
+    {_id: new ObjectID(), text: "testing dummy todo 1",_creator: userOneID},
+    {_id: new ObjectID(), text: "testing dummy todo 1",_creator: userTwoID}
 ];
 
 const populatedTodos = function(done) {

@@ -11,12 +11,23 @@ let addTwoNumber = (n1, n2) =>{
     })
 }
 
-addTwoNumber(1,2).then((res)=>{
-    console.log(res)
-    addTwoNumber(res,'2').then((res)=>{
-        console.log(res)
-        addTwoNumber(res,2).then((res)=>{
-            console.log(res)
-        })
-    })
-}).catch((e)=> console.log('This is th error case : ', e))
+// addTwoNumber(1,2).then((res)=>{
+//     console.log(res)
+//     addTwoNumber(res,'2').then((res)=>{
+//         console.log(res)
+//         addTwoNumber(res,2).then((res)=>{
+//             console.log(res)
+//         }).catch(e=>console.log("3rd"))
+//     }).catch((e)=> console.log("2nd"))
+// }).catch((e)=> console.log('This is th error case : ', e))
+
+addTwoNumber(1,'2').then((res) => {
+    console.log('res should be 3 : ',res)
+    return addTwoNumber(res,2)
+}, (e) => {
+    console.log('err is res 1');
+}).then((res) => {
+    console.log('res should be 5 : ',res)
+}, (e) => {
+    console.log('err in res 2');
+});
