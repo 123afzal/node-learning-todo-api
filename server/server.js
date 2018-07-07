@@ -58,6 +58,14 @@ app.get('/todos', authenticate, (req,res)=>{
         .catch(e=>res.status(400).send())
 });
 
+app.get('/todos/aggregation', authenticate, (req,res)=> {
+    Todo.aggregate([ { $match : { $and: [ { _creator : req.user._id }, { completed: true } ]  } }])
+        .then((todos) => {
+            res.status(200).send(todos);
+        })
+        .catch(e=>res.status(404).send('Not'));
+});
+
 app.get('/todos/:id', authenticate, (req,res)=>{
     const id = req.params.id;
 
@@ -121,7 +129,7 @@ app.patch('/todos/:id', authenticate, (req,res) => {
 
 // POST /users
 app.post('/users', (req, res)=>{
-    var body = _.pick(req.body, ['name', 'email', 'password'])
+    var body = _.pick(req.body, ['name', 'email', 'password']);
     var user = new Users(body);
 
     user.save().then(()=>{
@@ -139,12 +147,12 @@ app.get('/users/me', authenticate, (req,res)=>{
 
 // POST /users/login
 app.post('/users/login', (req, res)=>{
-    var body = _.pick(req.body,['email', 'password'])
+    var body = _.pick(req.body,['email', 'password']);
 
     Users.findByCredentials(body.email, body.password).then((user)=>{
-        console.log("credetials")
+        console.log("credetials");
         return user.generatAuthToken().then((token)=>{
-            console.log("ayht",token)
+            console.log("ayht",token);
             console.log(user);
             res.header({'x-auth': token}).status(200).send(user);
         })
@@ -166,5 +174,5 @@ app.listen(port, ()=>{
     console.log("server is up on port : ", port);
 });
 
-module.exports = {app}
 
+module.exports = {app};
