@@ -29,6 +29,10 @@ var UserSchema = new mongoose.Schema({
         minlength:8,
         required: true,
     },
+    profile_pic: {
+        type: String,
+        default: '',
+    },
     tokens:[{
         access:{
             type: String,

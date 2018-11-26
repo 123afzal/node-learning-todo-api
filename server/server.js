@@ -8,17 +8,19 @@ var env = process.env.NODE_ENV || 'development';
 console.log("env ___ :", env);
 
 if(env == 'development'){
-    process.env.PORT = 3000;
+    process.env.PORT = 8000;
     process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoApp';
 } else if(env == 'test'){
-    process.env.PORT = 3000;
+    process.env.PORT = 8000;
     process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoAppTest';
 }
 
 // 3rd party dependecies
 const express = require('express');
 const bodyParser = require('body-parser');
-const _ = require('lodash')
+const _ = require('lodash');
+const cors = require('cors');
+const AWS = require('aws-sdk');
 
 // project models
 var {mongoose} = require('../server/db');
@@ -30,7 +32,13 @@ var port = process.env.PORT;
 var app = express();
 
 app.use(bodyParser.json());
+app.use(cors());
 
+const s3 = new AWS.S3({
+    accessKeyId: 'AKIAIBZ63RSDTHKMVTVA',
+    secretAccessKey: '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',
+    region: 'ap-south-1'
+});
 /* TODOS Routes */
 app.post('/todos', authenticate, (req,res)=>{
    var todo = new Todo({
@@ -172,6 +180,24 @@ app.delete('/users/me/logout', authenticate, (req, res)=>{
 
 app.listen(port, ()=>{
     console.log("server is up on port : ", port);
+});
+
+app.get('/upload/image/file', authenticate, (req, res) => {
+    console.log(req.user);
+    let key = `${req.user._id}/${new Date().getTime()}.jpeg`;
+    const signedUrlExpireSeconds = 60 * 60;
+    s3.getSignedUrl('putObject',
+        {
+            Bucket: 'afzal-todo-bucket-123',
+            Key: key,
+            Expires: signedUrlExpireSeconds,
+            ContentType: 'image/jpeg'
+        }, function (err, url){
+        if(err)
+            res.status(400).send();
+        else
+            res.status(200).send({key, url})
+    });
 });
 
 
