@@ -1,19 +1,7 @@
 /**
  * Created by Syed Afzal
  */
-// configuartion of environment variables
-
-var env = process.env.NODE_ENV || 'development';
-
-console.log("env ___ :", env);
-
-if(env == 'development'){
-    process.env.PORT = 8000;
-    process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoApp';
-} else if(env == 'test'){
-    process.env.PORT = 8000;
-    process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoAppTest';
-}
+require('./config/config')
 
 // 3rd party dependecies
 const express = require('express');
